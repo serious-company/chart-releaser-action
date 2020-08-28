@@ -328,8 +328,8 @@ release_private_charts() {
     echo "Generated index.yaml"
     helm repo index .
     echo "Patch index.yaml"
-    echo "sed: s|artifacts/|$artifact_url|g"
-    sed -i "s|artifacts/|$artifact_url|g" index.yaml
+    echo "sed: s|.cr-release-packages|$artifact_url|g"
+    sed -i "s|.cr-release-packages|$artifact_url|g" index.yaml
     cat index.yaml
     echo "Publish releases ignore errors"
 
