@@ -131,7 +131,7 @@ parse_command_line() {
                     charts_url="$2"
                     shift
                 else
-                    echo "ERROR: '-u|--charts-url' cannot be empty." >&2
+                    echo "ERROR: '-c|--charts-url' cannot be empty." >&2
                     show_help
                     exit 1
                 fi
@@ -230,6 +230,7 @@ lookup_changed_charts() {
 }
 
 repo_add() {
+    echo "charts_url: $charts_url"
     helm repo add --username x-access-token --password $GITHUB_TOKEN charts $charts_url
 }
 
