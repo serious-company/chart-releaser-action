@@ -17,7 +17,7 @@ inputs:
     description: "It will publish the artifacts on a branch if the repository is private but will create a release for every chart anyway"
     default: false
   charts_url:
-    description: "The github pages chart url (default: "https://<owner>.github.io/<repo>/index.yaml")"
+    description: "The github pages chart url (default: https://<owner>.github.io/<repo>/index.yaml)"
     required: false
 runs:
   using: "node12"
