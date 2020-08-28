@@ -341,6 +341,7 @@ release_private_charts() {
 
     git worktree add "$gh_pages_worktree" gh-pages
 
+    ls -la
     cp --force .cr-index/index.yaml "$gh_pages_worktree/index.yaml"
 
     pushd "$gh_pages_worktree" > /dev/null
