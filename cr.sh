@@ -307,7 +307,7 @@ release_private_charts() {
 
     echo "packaging changed charts"
     ls -la
-    for chart in "./charts/*/"; do
+    for chart in ./charts/*/; do
         echo "===> chart: $chart"
         helm package "$chart" --destination "./artifacts" --dependency-update
     done
