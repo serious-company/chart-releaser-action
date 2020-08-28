@@ -299,6 +299,7 @@ release_private_charts() {
 
     echo "Fetch"
     git branch
+    git remote -v
     # git fetch origin artifacts:refs/remotes/origin/artifacts --set-upstream "$repo_url"
 
     echo "Get artificats folder"
