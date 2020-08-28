@@ -20,7 +20,7 @@ set -o pipefail
 
 DEFAULT_CHART_RELEASER_VERSION=v1.0.0
 
-: "${CR_TOKEN:?Environment variable CR_TOKEN must be set}"
+: "${GITHUB_TOKEN:?Environment variable GITHUB_TOKEN must be set}"
 
 show_help() {
 cat << EOF
@@ -43,6 +43,9 @@ main() {
     local charts_repo_url=
 
     parse_command_line "$@"
+
+    git config user.name "$GITHUB_ACTOR"
+    git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
     echo "$repo"
     local repo_root
@@ -226,6 +229,10 @@ update_index() {
 
     set -x
 
+    echo "owner: $owner"
+    echo "repo: $repo"
+    echo "charts_repo_url: $charts_repo_url"
+
     cr index -o "$owner" -r "$repo" -c "$charts_repo_url"
 
     gh_pages_worktree=$(mktemp -d)
@@ -239,7 +246,7 @@ update_index() {
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
 
-    local repo_url="https://x-access-token:$CR_TOKEN@github.com/$owner/$repo"
+    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
     git push "$repo_url" gh-pages
 
     popd > /dev/null

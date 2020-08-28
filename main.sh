@@ -35,6 +35,10 @@ main() {
         args+=(--charts-repo-url "${INPUT_CHARTS_REPO_URL}")
     fi
 
+    if [[ -n "${INPUT_PRIVATE:-}" ]]; then
+        args+=(--private "${INPUT_PRIVATE}")
+    fi
+
     "$SCRIPT_DIR/cr.sh" "${args[@]}"
 }
 
