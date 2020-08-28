@@ -293,9 +293,12 @@ update_public_index() {
 }
 
 release_private_charts() {
+    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
+
     echo 'Releasing private charts ...'
 
     echo "Fetch"
+    git remote add origin "$repo_url"
     git fetch --prune
 
     echo "Get artificats folder"
@@ -318,7 +321,6 @@ release_private_charts() {
     git add artifacts
     git commit --message="Update artifacts" --signoff
 
-    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
     git push "$repo_url" artifacts
 
     popd > /dev/null
@@ -344,7 +346,6 @@ release_private_charts() {
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
 
-    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
     git push "$repo_url" gh-pages
 
     popd > /dev/null
