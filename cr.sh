@@ -295,6 +295,9 @@ update_public_index() {
 release_private_charts() {
     echo 'Releasing private charts ...'
 
+    echo "Fetch"
+    git fetch --prune
+
     echo "Get artificats folder"
     git checkout artifacts -- ./artifacts
 
