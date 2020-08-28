@@ -82,6 +82,7 @@ main() {
             fi
         done
 
+        echo "private: $private"
 
         if [[ -d "$private" ]]; then
             release_private_charts
