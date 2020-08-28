@@ -298,7 +298,7 @@ release_private_charts() {
     echo 'Releasing private charts ...'
 
     echo "Fetch"
-    git fetch --prune --all -f --set-upstream "$repo_url"
+    git fetch --set-upstream "$repo_url"
 
     echo "Get artificats folder"
     git checkout artifacts -- ./artifacts
