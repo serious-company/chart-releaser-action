@@ -306,6 +306,7 @@ release_private_charts() {
     git checkout remotes/origin/artifacts -- ./artifacts
 
     echo "packaging changed charts"
+    ls -la
     for chart in "./charts/*/"; do
         echo "===> chart: $chart"
         helm package "$chart" --destination "./artifacts" --dependency-update
