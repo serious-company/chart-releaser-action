@@ -297,17 +297,11 @@ release_private_charts() {
 
     echo 'Releasing private charts ...'
 
-    echo "Fetch"
-    # git fetch -a -f
-    # git branch -a
-    # git fetch origin artifacts:refs/remotes/origin/artifacts --set-upstream "$repo_url"
-
     echo "Get artificats folder"
     git checkout remotes/origin/artifacts -- ./artifacts
 
     echo "packaging changed charts"
     for chart in ./charts/*/; do
-        echo "===> chart: $chart"
         helm package "$chart" --destination "./artifacts" --dependency-update
     done
 
@@ -323,7 +317,7 @@ release_private_charts() {
     git add artifacts
     git commit --message="Update artifacts" --signoff
 
-    git push "$repo_url" artifacts
+    #=git push "$repo_url" artifacts
 
     popd > /dev/null
 
@@ -334,7 +328,9 @@ release_private_charts() {
     echo "Generated index.yaml"
     helm repo index .
     echo "Patch index.yaml"
+    echo "sed: s|artifacts/|$artifact_url|g"
     sed -i "s|artifacts/|$artifact_url|g" index.yaml
+    cat index.yaml
     echo "Publish releases ignore errors"
 
     gh_pages_worktree=$(mktemp -d)
@@ -348,7 +344,7 @@ release_private_charts() {
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
 
-    git push "$repo_url" gh-pages
+    #=git push "$repo_url" gh-pages
 
     popd > /dev/null
 
