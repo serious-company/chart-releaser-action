@@ -85,10 +85,10 @@ main() {
         echo "private: $private"
 
         if [[ -d "$private" ]]; then
-            release_private_charts
-        else
             update_public_index
             release_public_charts
+        else
+            release_private_charts
         fi
     else
         echo "Nothing to do. No chart changes detected."
