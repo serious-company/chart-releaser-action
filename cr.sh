@@ -181,7 +181,7 @@ parse_command_line() {
     fi
 
     if [[ -z "$charts_url" ]]; then
-        charts_url="https://$owner.github.io/$repo/index.yaml"
+        charts_url="https://$owner.github.io/$repo"
     fi
 }
 
