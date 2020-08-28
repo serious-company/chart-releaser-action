@@ -243,7 +243,7 @@ package_chart() {
 
 release_charts() {
     echo 'Releasing charts...'
-    cr upload -o "$owner" -r "$repo"
+    cr upload -o "$owner" -r "$repo" --token "$GITHUB_TOKEN"
 }
 
 update_index() {
