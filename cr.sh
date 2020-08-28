@@ -41,6 +41,7 @@ main() {
     local owner=
     local repo=
     local charts_repo_url=
+    local charts_url=
 
     parse_command_line "$@"
 
