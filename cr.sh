@@ -306,7 +306,6 @@ release_private_charts() {
     git checkout remotes/origin/artifacts -- ./artifacts
 
     echo "packaging changed charts"
-    ls -la
     for chart in ./charts/*/; do
         echo "===> chart: $chart"
         helm package "$chart" --destination "./artifacts" --dependency-update
@@ -317,7 +316,7 @@ release_private_charts() {
 
     git worktree add "$artifacts_worktree" artifacts
 
-    cp --force ./artifacts "$artifacts_worktree/artifacts"
+    cp -r ./artifacts/* "$artifacts_worktree/artifacts/"
 
     pushd "$artifacts_worktree" > /dev/null
 
