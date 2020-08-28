@@ -298,7 +298,7 @@ release_private_charts() {
     echo 'Releasing private charts ...'
 
     echo "Fetch"
-    git fetch origin artifacts --set-upstream "$repo_url"
+    git fetch origin artifacts:refs/remotes/origin/artifacts --set-upstream "$repo_url"
 
     echo "Get artificats folder"
     git checkout artifacts -- ./artifacts
