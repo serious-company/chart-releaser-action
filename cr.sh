@@ -317,7 +317,7 @@ release_private_charts() {
     git add artifacts
     git commit --message="Update artifacts" --signoff
 
-    #=git push "$repo_url" artifacts
+    git push "$repo_url" artifacts
 
     popd > /dev/null
 
@@ -344,7 +344,7 @@ release_private_charts() {
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
 
-    #=git push "$repo_url" gh-pages
+    git push "$repo_url" gh-pages
 
     popd > /dev/null
 
