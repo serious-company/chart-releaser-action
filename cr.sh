@@ -42,6 +42,8 @@ main() {
     local repo=
     local charts_repo_url=
     local charts_url=
+    local private=
+    local artifact_url=
 
     parse_command_line "$@"
 
@@ -80,8 +82,13 @@ main() {
             fi
         done
 
-        release_charts
-        update_index
+
+        if [[ -d "$private" ]]; then
+            release_private_charts
+        else
+            update_public_index
+            release_public_charts
+        fi
     else
         echo "Nothing to do. No chart changes detected."
     fi
@@ -136,6 +143,16 @@ parse_command_line() {
                     exit 1
                 fi
                 ;;
+            -p|--private)
+                if [[ -n "${2:-}" ]]; then
+                    private="$2"
+                    shift
+                else
+                    echo "ERROR: '-p|--private' cannot be empty." >&2
+                    show_help
+                    exit 1
+                fi
+                ;;
             -o|--owner)
                 if [[ -n "${2:-}" ]]; then
                     owner="$2"
@@ -182,6 +199,10 @@ parse_command_line() {
 
     if [[ -z "$charts_url" ]]; then
         charts_url="https://$owner.github.io/$repo"
+    fi
+
+        if [[ -z "$artifact_url" ]]; then
+        artifact_url="https://raw.githubusercontent.com/$owner/$repo/artifacts/artifacts/"
     fi
 }
 
@@ -241,19 +262,15 @@ package_chart() {
     helm package "$chart" --destination .cr-release-packages --dependency-update
 }
 
-release_charts() {
+release_public_charts() {
     echo 'Releasing charts...'
     cr upload -o "$owner" -r "$repo" --token "$GITHUB_TOKEN"
 }
 
-update_index() {
+update_public_index() {
     echo 'Updating charts repo index...'
 
     set -x
-
-    echo "owner: $owner"
-    echo "repo: $repo"
-    echo "charts_repo_url: $charts_repo_url"
 
     cr index -o "$owner" -r "$repo" -c "$charts_repo_url"
 
@@ -273,5 +290,67 @@ update_index() {
 
     popd > /dev/null
 }
+
+release_private_charts() {
+    echo 'Releasing private charts...'
+
+    echo "git fetch"
+    git fetch --prune --unshallow
+
+    echo "Get artificats folder"
+    git ck artifacts -- ./artifacts
+
+    echo "packaging changed charts"
+    for chart in $charts_dir; do
+        helm package "$chart" --destination "./artifacts" --dependency-update
+    done
+
+    echo "Commit artifacts"
+    artifacts_worktree=$(mktemp -d)
+
+    git worktree add "$artifacts_worktree" artifacts
+
+    cp --force ./artifacts "$artifacts_worktree/artifacts"
+
+    pushd "$artifacts_worktree" > /dev/null
+
+    git add artifacts
+    git commit --message="Update artifacts" --signoff
+
+    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
+    git push "$repo_url" artifacts
+
+    popd > /dev/null
+
+    echo "Finish commit artifacts"
+
+    echo 'Updating charts repo index...'
+
+    echo "Generated index.yaml"
+    helm repo index .
+    echo "Patch index.yaml"
+    sed -i "s|$artifacts/|$artifact_url|g" index.yaml
+    echo "Publish releases ignore errors"
+
+    gh_pages_worktree=$(mktemp -d)
+
+    git worktree add "$gh_pages_worktree" gh-pages
+
+    cp --force .cr-index/index.yaml "$gh_pages_worktree/index.yaml"
+
+    pushd "$gh_pages_worktree" > /dev/null
+
+    git add index.yaml
+    git commit --message="Update index.yaml" --signoff
+
+    local repo_url="https://x-access-token:$GITHUB_TOKEN@github.com/$owner/$repo"
+    git push "$repo_url" gh-pages
+
+    popd > /dev/null
+
+    echo "publish changed charts on release"
+    cr index -o "$owner" -r "$repo" -c "$charts_repo_url" || true
+}
+
 
 main "$@"
