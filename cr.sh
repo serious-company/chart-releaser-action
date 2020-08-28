@@ -296,7 +296,7 @@ release_private_charts() {
     echo 'Releasing private charts...'
 
     echo "Get artificats folder"
-    git ck artifacts -- ./artifacts
+    git checkout artifacts -- ./artifacts
 
     echo "packaging changed charts"
     for chart in $charts_dir; do
