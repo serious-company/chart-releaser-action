@@ -69,6 +69,8 @@ main() {
         rm -rf .cr-index
         mkdir -p .cr-index
 
+        repo_add
+
         for chart in "${changed_charts[@]}"; do
             if [[ -d "$chart" ]]; then
                 package_chart "$chart"
@@ -123,6 +125,16 @@ parse_command_line() {
                     exit 1
                 fi
                 ;;
+            -c|--charts-url)
+                if [[ -n "${2:-}" ]]; then
+                    charts_url="$2"
+                    shift
+                else
+                    echo "ERROR: '-u|--charts-url' cannot be empty." >&2
+                    show_help
+                    exit 1
+                fi
+                ;;
             -o|--owner)
                 if [[ -n "${2:-}" ]]; then
                     owner="$2"
@@ -165,6 +177,10 @@ parse_command_line() {
 
     if [[ -z "$charts_repo_url" ]]; then
         charts_repo_url="https://$owner.github.io/$repo"
+    fi
+
+    if [[ -z "$charts_url" ]]; then
+        charts_url="https://$owner.github.io/$repo/index.yaml"
     fi
 }
 
@@ -210,6 +226,10 @@ lookup_changed_charts() {
     fi
 
     cut -d '/' -f "$fields" <<< "$changed_files" | uniq | filter_charts
+}
+
+repo_add() {
+    helm repo add --username x-access-token --password $GITHUB_TOKEN charts $charts_url
 }
 
 package_chart() {

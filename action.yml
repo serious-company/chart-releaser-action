@@ -16,6 +16,9 @@ inputs:
   private:
     description: "It will publish the artifacts on a branch if the repository is private but will create a release for every chart anyway"
     default: false
+  charts_url:
+    description: "The github pages chart url"
+    required: false
 runs:
   using: "node12"
   main: "main.js"

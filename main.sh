@@ -39,6 +39,10 @@ main() {
         args+=(--private "${INPUT_PRIVATE}")
     fi
 
+    if [[ -n "${INPUT_CHARTS_URL:-}" ]]; then
+        args+=(--charts-url "${INPUT_CHARTS_URL}")
+    fi
+
     "$SCRIPT_DIR/cr.sh" "${args[@]}"
 }
 
