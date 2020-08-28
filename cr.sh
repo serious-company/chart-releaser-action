@@ -298,15 +298,20 @@ release_private_charts() {
     echo 'Releasing private charts ...'
 
     echo "Fetch"
-    git fetch -a -f
-    git branch -a
+    # git fetch -a -f
+    # git branch -a
     # git fetch origin artifacts:refs/remotes/origin/artifacts --set-upstream "$repo_url"
 
     echo "Get artificats folder"
     git checkout remotes/origin/artifacts -- ./artifacts
+    ls -la artifacts
 
     echo "packaging changed charts"
+    echo "charts_dir: $charts_dir"
     for chart in $charts_dir; do
+        echo "charts: $chart"
+        ls $chart
+
         helm package "$chart" --destination "./artifacts" --dependency-update
     done
 
