@@ -202,7 +202,7 @@ parse_command_line() {
         charts_url="https://$owner.github.io/$repo"
     fi
 
-        if [[ -z "$artifact_url" ]]; then
+    if [[ -z "$artifact_url" ]]; then
         artifact_url="https://raw.githubusercontent.com/$owner/$repo/artifacts/artifacts/"
     fi
 }
@@ -334,6 +334,9 @@ release_private_charts() {
     echo "Generated index.yaml"
     helm repo index .
     echo "Patch index.yaml"
+    echo "artifact_url: $artifact_url"
+    echo "artifacts: $artifacts"
+    ls -la
     sed -i "s|$artifacts/|$artifact_url|g" index.yaml
     echo "Publish releases ignore errors"
 
