@@ -298,8 +298,7 @@ release_private_charts() {
     echo 'Releasing private charts ...'
 
     echo "Fetch"
-    git remote add origin "$repo_url"
-    git fetch --prune
+    git fetch --prune --all -f
 
     echo "Get artificats folder"
     git checkout artifacts -- ./artifacts
