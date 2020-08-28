@@ -47,9 +47,6 @@ main() {
 
     parse_command_line "$@"
 
-    git config user.name "$GITHUB_ACTOR"
-    git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
     echo "$repo"
     local repo_root
     repo_root=$(git rev-parse --show-toplevel)
@@ -83,6 +80,9 @@ main() {
         done
 
         echo "private: $private"
+
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
         if [[ -d "$private" ]]; then
             update_public_index
