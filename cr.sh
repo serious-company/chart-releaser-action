@@ -304,14 +304,11 @@ release_private_charts() {
 
     echo "Get artificats folder"
     git checkout remotes/origin/artifacts -- ./artifacts
-    ls -la artifacts
 
     echo "packaging changed charts"
-    echo "charts_dir: $charts_dir"
-    for chart in $charts_dir; do
-        echo "charts: $chart"
+    for chart in "$charts_dir/*/"; do
+        echo "chart: $chart"
         ls $chart
-
         helm package "$chart" --destination "./artifacts" --dependency-update
     done
 
