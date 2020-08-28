@@ -13,6 +13,9 @@ inputs:
   charts_repo_url:
     description: "The GitHub Pages URL to the charts repo (default: https://<owner>.github.io/<repo>)"
     required: true
+  private:
+    description: "It will publish the artifacts on a branch if the repository is private but will create a release for every chart anyway"
+    default: false
 runs:
   using: "node12"
   main: "main.js"
