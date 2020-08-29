@@ -350,7 +350,8 @@ release_private_charts() {
     popd > /dev/null
 
     echo "publish changed charts on release"
-    cr index -o "$owner" -r "$repo" -c "$charts_repo_url" || true
+    cr upload -o "$owner" -r "$repo" --token "$GITHUB_TOKEN" || true
+    # cr index -o "$owner" -r "$repo" -c "$charts_repo_url" || true
 }
 
 
